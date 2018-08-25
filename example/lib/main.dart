@@ -1,5 +1,6 @@
 import 'package:app/generated/AddStarMutation.dart';
 import 'package:app/generated/ReadRepositoriesQuery.dart';
+import 'package:dartz/dartz.dart' as dz;
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -71,8 +72,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
           var queryResponse = ReadRepositories(data);
 
-          var repositories = queryResponse.viewer.repositories.nodes
-              .fold(() => [], (nodes) => nodes);
+          var repositories =
+              queryResponse.viewer.repositories.nodes.getOrElse(() => []);
 
           return ListView.builder(
             itemCount: repositories.length,
