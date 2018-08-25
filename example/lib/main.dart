@@ -69,11 +69,10 @@ class _MyHomePageState extends State<MyHomePage> {
             return Text('Loading');
           }
 
-          var typedData = ReadRepositories(data);
+          var queryResponse = ReadRepositories(data);
 
           // it can be either Map or List
-          // List repositories = data['viewer']['repositories']['nodes'];
-          var repositories = typedData.viewer.repositories.nodes;
+          var repositories = queryResponse.viewer.repositories.nodes;
 
           return ListView.builder(
             itemCount: repositories.length,
@@ -88,14 +87,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   Map data,
                   Exception error,
                 }) {
-                  // if (data.isNotEmpty) {
-                  //   repository['viewerHasStarred'] =
-                  //       data['addStar']['starrable']['viewerHasStarred'];
-                  // }
-                  var typedData = AddStar(data);
+                  var mutationResponse = AddStar(data);
 
                   return ListTile(
-                    leading: typedData.addStar.fold(() => false,
+                    leading: mutationResponse.addStar.fold(() => false,
                             (addStar) => addStar.starrable.viewerHasStarred)
                         ? const Icon(Icons.star, color: Colors.amber)
                         : const Icon(Icons.star_border),
@@ -104,12 +99,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       // NOTE: optimistic ui updates are not implemented yet, therefore changes may take upto 1 second to show.
                     ),
                     onTap: () {
-                      // addStar({
-                      //   'starrableId': repository.fold(() => "", (rep) => rep.name),
-                      // });
                       addStar(addStarVariables(
                           starrableId:
-                              repository.fold(() => "", (rep) => rep.name)));
+                              repository.fold(() => "", (rep) => rep.id)));
                     },
                   );
                 },
