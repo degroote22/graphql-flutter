@@ -1,6 +1,5 @@
 import 'package:app/generated/AddStarMutation.dart';
 import 'package:app/generated/ReadRepositoriesQuery.dart';
-import 'package:dartz/dartz.dart' as dz;
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
