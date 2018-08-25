@@ -1,4 +1,6 @@
-String addStar = """
+String gql(String input) => input;
+
+String addStar = gql("""
   mutation AddStar(\$starrableId: ID!) {
     addStar(input: {starrableId: \$starrableId}) {
       starrable {
@@ -6,5 +8,4 @@ String addStar = """
       }
     }
   }
-"""
-    .replaceAll('\n', ' ');
+""").replaceAll('\n', ' ');

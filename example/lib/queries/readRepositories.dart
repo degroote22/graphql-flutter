@@ -1,4 +1,6 @@
-String readRepositories = """
+String gql(String input) => input;
+
+String readRepositories = gql("""
   query ReadRepositories {
     viewer {
       repositories(last: 50) {
@@ -10,5 +12,4 @@ String readRepositories = """
       }
     }
   }
-"""
-    .replaceAll('\n', ' ');
+""").replaceAll('\n', ' ');

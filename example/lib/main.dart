@@ -1,3 +1,5 @@
+import 'package:app/generated/AddStarMutation.dart';
+import 'package:app/generated/ReadRepositoriesQuery.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -67,8 +69,11 @@ class _MyHomePageState extends State<MyHomePage> {
             return Text('Loading');
           }
 
+          var typedData = ReadRepositories(data);
+
           // it can be either Map or List
-          List repositories = data['viewer']['repositories']['nodes'];
+          // List repositories = data['viewer']['repositories']['nodes'];
+          var repositories = typedData.viewer.repositories.nodes;
 
           return ListView.builder(
             itemCount: repositories.length,
@@ -83,21 +88,28 @@ class _MyHomePageState extends State<MyHomePage> {
                   Map data,
                   Exception error,
                 }) {
-                  if (data.isNotEmpty) {
-                    repository['viewerHasStarred'] =
-                        data['addStar']['starrable']['viewerHasStarred'];
-                  }
+                  // if (data.isNotEmpty) {
+                  //   repository['viewerHasStarred'] =
+                  //       data['addStar']['starrable']['viewerHasStarred'];
+                  // }
+                  var typedData = AddStar(data);
 
                   return ListTile(
-                    leading: repository['viewerHasStarred']
+                    leading: typedData.addStar.fold(() => false,
+                            (addStar) => addStar.starrable.viewerHasStarred)
                         ? const Icon(Icons.star, color: Colors.amber)
                         : const Icon(Icons.star_border),
-                    title: Text(repository['name']),
-                    // NOTE: optimistic ui updates are not implemented yet, therefore changes may take upto 1 second to show.
+                    title: Text(
+                      repository.fold(() => "", (rep) => rep.name),
+                      // NOTE: optimistic ui updates are not implemented yet, therefore changes may take upto 1 second to show.
+                    ),
                     onTap: () {
-                      addStar({
-                        'starrableId': repository['id'],
-                      });
+                      // addStar({
+                      //   'starrableId': repository.fold(() => "", (rep) => rep.name),
+                      // });
+                      addStar(addStarVariables(
+                          starrableId:
+                              repository.fold(() => "", (rep) => rep.name)));
                     },
                   );
                 },
