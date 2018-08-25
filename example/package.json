@@ -7,7 +7,7 @@
     "gen": "gql-gen --template dart-template --skip-schema --schema \"./schema/github.json\" --out ./lib/generated/ \"./lib/**/*.dart\""
   },
   "dependencies": {
-    "dart-template": "^0.0.4",
+    "dart-template": "^0.0.5",
     "graphql-code-generator-dart": "^0.11.1"
   }
 }

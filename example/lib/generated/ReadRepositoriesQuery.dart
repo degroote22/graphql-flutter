@@ -27,14 +27,16 @@ class ReadRepositoriesUserRepositoryConnection {
   final Map<String, dynamic> _d;
 
   /// A repository contains the content for a project.
-  List<Option<ReadRepositoriesUserRepositoryConnectionRepository>> get nodes =>
-      (this._d["nodes"] as List)
-          .map<Option<ReadRepositoriesUserRepositoryConnectionRepository>>(
-              (repository) => option(
-                  repository != null,
-                  ReadRepositoriesUserRepositoryConnectionRepository(
-                      repository)))
-          .toList();
+  Option<List<Option<ReadRepositoriesUserRepositoryConnectionRepository>>>
+      get nodes => option(
+          this._d["nodes"] != null,
+          (this._d["nodes"] as List)
+              .map<Option<ReadRepositoriesUserRepositoryConnectionRepository>>(
+                  (repository) => option(
+                      repository != null,
+                      ReadRepositoriesUserRepositoryConnectionRepository(
+                          repository)))
+              .toList());
 
   String toString() {
     return this._d.toString();

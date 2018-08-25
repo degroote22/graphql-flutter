@@ -71,8 +71,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
           var queryResponse = ReadRepositories(data);
 
-          // it can be either Map or List
-          var repositories = queryResponse.viewer.repositories.nodes;
+          var repositories = queryResponse.viewer.repositories.nodes
+              .fold(() => [], (nodes) => nodes);
 
           return ListView.builder(
             itemCount: repositories.length,
