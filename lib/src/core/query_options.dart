@@ -40,7 +40,7 @@ class BaseOptions {
   ErrorPolicy errorPolicy;
 
   /// Context to be passed to link execution chain.
-  Map<String, dynamic> context;
+  Future<Map<String, dynamic>> context;
 
   BaseOptions({
     @required this.document,
@@ -63,7 +63,7 @@ class QueryOptions extends BaseOptions {
     FetchPolicy fetchPolicy = FetchPolicy.cacheFirst,
     ErrorPolicy errorPolicy = ErrorPolicy.none,
     this.pollInterval,
-    Map<String, dynamic> context,
+    Future<Map<String, dynamic>> context,
   }) : super(
           document: document,
           variables: variables,
@@ -80,7 +80,7 @@ class MutationOptions extends BaseOptions {
     Map<String, dynamic> variables,
     FetchPolicy fetchPolicy = FetchPolicy.networkOnly,
     ErrorPolicy errorPolicy = ErrorPolicy.none,
-    Map<String, dynamic> context,
+    Future<Map<String, dynamic>> context,
   }) : super(
           document: document,
           variables: variables,
@@ -102,7 +102,7 @@ class WatchQueryOptions extends QueryOptions {
     ErrorPolicy errorPolicy = ErrorPolicy.none,
     int pollInterval,
     this.fetchResults,
-    Map<String, dynamic> context,
+    Future<Map<String, dynamic>> context,
   }) : super(
           document: document,
           variables: variables,

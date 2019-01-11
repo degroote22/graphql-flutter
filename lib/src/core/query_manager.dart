@@ -78,10 +78,6 @@ class QueryManager {
     QueryResult queryResult;
 
     try {
-      if (options.context != null) {
-        operation.setContext(options.context);
-      }
-
       if (options.fetchPolicy == FetchPolicy.cacheFirst ||
           options.fetchPolicy == FetchPolicy.cacheAndNetwork ||
           options.fetchPolicy == FetchPolicy.cacheOnly) {
@@ -110,6 +106,15 @@ class QueryManager {
             'Could not find that operation in the cache. (${options.fetchPolicy.toString()})',
           );
         }
+      }
+
+      // get the async context
+      try {
+        if (options.context != null) {
+          operation.setContext(await options.context);
+        }
+      } catch (err) {
+        throw Exception('Could not resolve context promise');
       }
 
       // execute the operation trough the provided link(s)
