@@ -88,7 +88,7 @@ class QueryManager {
             data: cachedData,
           );
 
-          queryResult = _mapFetchResultToQueryResult(fetchResult);
+          queryResult = _mapFetchResultToQueryResult(fetchResult, true);
 
           // add the result to an observable query if it exists
           if (observableQuery != null) {
@@ -141,7 +141,7 @@ class QueryManager {
         );
       }
 
-      queryResult = _mapFetchResultToQueryResult(fetchResult);
+      queryResult = _mapFetchResultToQueryResult(fetchResult, false);
     } catch (error) {
       final GraphQLError graphQLError = GraphQLError(
         message: error.message,
@@ -185,7 +185,10 @@ class QueryManager {
     return requestId;
   }
 
-  QueryResult _mapFetchResultToQueryResult(FetchResult fetchResult) {
+  QueryResult _mapFetchResultToQueryResult(
+    FetchResult fetchResult,
+    bool loading,
+  ) {
     List<GraphQLError> errors;
 
     if (fetchResult.errors != null) {
@@ -197,7 +200,7 @@ class QueryManager {
     return QueryResult(
       data: fetchResult.data,
       errors: errors,
-      loading: false,
+      loading: loading,
     );
   }
 }
