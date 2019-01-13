@@ -56,8 +56,15 @@ class InMemoryCache implements Cache {
     return File('$path/cache.txt');
   }
 
+  bool writing = false;
   Future<dynamic> _writeToStorage() async {
+    if (!writing) {
+      writing = true;
+    } else {
+      return;
+    }
     final File file = await _localStorageFile;
+
     final IOSink sink = file.openWrite();
 
     _inMemoryCache.forEach((String key, dynamic value) {
@@ -65,7 +72,7 @@ class InMemoryCache implements Cache {
     });
 
     await sink.close();
-
+    writing = false;
     return;
   }
 
@@ -76,7 +83,6 @@ class InMemoryCache implements Cache {
 
       if (file.existsSync()) {
         final Stream<List<int>> inputStream = file.openRead();
-
         inputStream
             .transform(utf8.decoder) // Decode bytes to UTF8.
             .transform(

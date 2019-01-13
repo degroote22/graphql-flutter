@@ -88,7 +88,8 @@ class QueryManager {
             data: cachedData,
           );
 
-          queryResult = _mapFetchResultToQueryResult(fetchResult, true);
+          queryResult = _mapFetchResultToQueryResult(fetchResult,
+              options.fetchPolicy == FetchPolicy.cacheFirst ? false : true);
 
           // add the result to an observable query if it exists
           if (observableQuery != null) {
@@ -148,6 +149,7 @@ class QueryManager {
       );
 
       if (queryResult != null) {
+        queryResult.loading = false;
         queryResult.addError(graphQLError);
       } else {
         queryResult = QueryResult(
