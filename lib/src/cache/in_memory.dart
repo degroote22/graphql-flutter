@@ -9,6 +9,7 @@ import 'package:graphql_flutter/src/cache/cache.dart';
 
 class InMemoryCache implements Cache {
   HashMap<String, dynamic> _inMemoryCache = HashMap<String, dynamic>();
+  bool _writingToStorage = false;
 
   /// Reads an entity from the internal HashMap.
   @override
@@ -23,7 +24,15 @@ class InMemoryCache implements Cache {
   /// Writes an entity to the internal HashMap.
   @override
   void write(String key, dynamic value) {
-    _inMemoryCache[key] = value;
+    if (_inMemoryCache.containsKey(key) &&
+        _inMemoryCache[key] is Map &&
+        value != null &&
+        value is Map) {
+      // Avoid overriding a superset with a subset of a field (#155)
+      _inMemoryCache[key].addAll(value);
+    } else {
+      _inMemoryCache[key] = value;
+    }
   }
 
   /// Saves the internal HashMap to a file.
@@ -56,23 +65,28 @@ class InMemoryCache implements Cache {
     return File('$path/cache.txt');
   }
 
-  bool writing = false;
   Future<dynamic> _writeToStorage() async {
-    if (!writing) {
-      writing = true;
-    } else {
+    if (_writingToStorage) {
       return;
     }
-    final File file = await _localStorageFile;
+    _writingToStorage = true;
 
-    final IOSink sink = file.openWrite();
+    // Catching errors to avoid locking forever.
+    // Maybe the device couldn't write in the past
+    // but it may in the future.
+    try {
+      final File file = await _localStorageFile;
+      final IOSink sink = file.openWrite();
 
-    _inMemoryCache.forEach((String key, dynamic value) {
-      sink.writeln(json.encode(<dynamic>[key, value]));
-    });
+      _inMemoryCache.forEach((String key, dynamic value) {
+        sink.writeln(json.encode(<dynamic>[key, value]));
+      });
 
-    await sink.close();
-    writing = false;
+      await sink.close();
+    } catch (err) {
+      // XXX Is there anything to be done?
+    }
+    _writingToStorage = false;
     return;
   }
 
