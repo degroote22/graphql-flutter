@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:meta/meta.dart';
 
 /// [FetchPolicy] determines where the client may return a result from. The options are:
@@ -40,7 +42,7 @@ class BaseOptions {
   ErrorPolicy errorPolicy;
 
   /// Context to be passed to link execution chain.
-  Future<Map<String, dynamic>> context;
+  FutureOr<Map<String, dynamic>> context;
 
   BaseOptions({
     @required this.document,
@@ -63,7 +65,7 @@ class QueryOptions extends BaseOptions {
     FetchPolicy fetchPolicy = FetchPolicy.cacheFirst,
     ErrorPolicy errorPolicy = ErrorPolicy.none,
     this.pollInterval,
-    Future<Map<String, dynamic>> context,
+    FutureOr<Map<String, dynamic>> context,
   }) : super(
           document: document,
           variables: variables,
@@ -80,7 +82,7 @@ class MutationOptions extends BaseOptions {
     Map<String, dynamic> variables,
     FetchPolicy fetchPolicy = FetchPolicy.networkOnly,
     ErrorPolicy errorPolicy = ErrorPolicy.none,
-    Future<Map<String, dynamic>> context,
+    FutureOr<Map<String, dynamic>> context,
   }) : super(
           document: document,
           variables: variables,
@@ -102,7 +104,7 @@ class WatchQueryOptions extends QueryOptions {
     ErrorPolicy errorPolicy = ErrorPolicy.none,
     int pollInterval,
     this.fetchResults,
-    Future<Map<String, dynamic>> context,
+    FutureOr<Map<String, dynamic>> context,
   }) : super(
           document: document,
           variables: variables,

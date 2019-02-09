@@ -89,13 +89,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
                 pollInterval: 4,
                 // you can optionally override some http options through the contexts
-                context:
-                    Future<Map<String, dynamic>>.sync(() => <String, dynamic>{
-                          'headers': <String, String>{
-                            'Authorization':
-                                'Bearer $YOUR_PERSONAL_ACCESS_TOKEN',
-                          },
-                        }),
+                context: <String, dynamic>{
+                  'headers': <String, String>{
+                    'Authorization': 'Bearer $YOUR_PERSONAL_ACCESS_TOKEN',
+                  },
+                },
               ),
               builder: (QueryResult result) {
                 if (result.loading) {
