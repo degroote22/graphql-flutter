@@ -31,6 +31,10 @@ final Map<String, Object> rawOperationData = <String, Object>{
       },
       'bField': <String, Object>{'field': true}
     },
+    'd': <String, Object>{
+      'id': 9,
+      'dField': <String, Object>{'field': true}
+    },
   },
   'aField': <String, Object>{'field': false}
 };
@@ -62,11 +66,15 @@ final Map<String, Object> updatedCOperationData = <String, Object>{
       'c': updatedCValue,
       'bField': <String, Object>{'field': true}
     },
+    'd': <String, Object>{
+      'id': 9,
+      'dField': <String, Object>{'field': true}
+    },
   },
   'aField': <String, Object>{'field': false}
 };
 
-final Map<String, Object> smallerAValue = <String, Object>{
+final Map<String, Object> subsetAValue = <String, Object>{
   'a': <String, Object>{
     '__typename': 'A',
     'id': 1,
@@ -80,10 +88,13 @@ final Map<String, Object> smallerAValue = <String, Object>{
         'value': 8,
       }
     ],
+    'd': <String, Object>{
+      'id': 10,
+    },
   },
 };
 
-final Map<String, Object> updatedAOperationData = <String, Object>{
+final Map<String, Object> updatedSubsetOperationData = <String, Object>{
   'a': <String, Object>{
     '__typename': 'A',
     'id': 1,
@@ -103,6 +114,10 @@ final Map<String, Object> updatedAOperationData = <String, Object>{
       'c': updatedCValue,
       'bField': <String, Object>{'field': true}
     },
+    'd': <String, Object>{
+      'id': 10,
+      'dField': <String, Object>{'field': true}
+    },
   },
   'aField': <String, Object>{'field': false}
 };
@@ -121,9 +136,9 @@ void main() {
       expect(cache.read(rawOperationKey), equals(updatedCOperationData));
     });
 
-    test('updating smaller query update parent', () {
-      cache.write('anotherKey', smallerAValue);
-      expect(cache.read(rawOperationKey), equals(updatedAOperationData));
+    test('updating subset query does not override superset query', () {
+      cache.write('anotherUnrelatedKey', subsetAValue);
+      expect(cache.read(rawOperationKey), equals(updatedSubsetOperationData));
     });
   });
 }
