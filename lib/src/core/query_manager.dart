@@ -90,7 +90,7 @@ class QueryManager {
     final dynamic cachedData = cache.read(operation.toKey());
     if (cachedData == null) {
       throw Exception(
-        'Could not find that operation in the cache.',
+        'Could not find that operation in the cache. $operationName',
       );
     }
     final FetchResult fetchResult = FetchResult(

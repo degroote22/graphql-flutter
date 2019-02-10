@@ -28,10 +28,12 @@ class ObservableQuery {
     );
   }
 
-  Stream<QueryResult> get stream => controller.stream.map((QueryResult result) {
-        result.refetch = fetchResults;
-        return result;
-      });
+  Stream<QueryResult> get stream => controller.stream.map(
+        (QueryResult result) {
+          result.refetch = fetchResults;
+          return result;
+        },
+      );
 
   void onListen() {
     if (options.fetchResults) {
@@ -39,9 +41,21 @@ class ObservableQuery {
     }
   }
 
-  Future<QueryResult> fetchResults() {
-    final Future<QueryResult> result =
-        queryManager.fetchQuery(queryId, options);
+  Future<QueryResult> fetchResults({FetchPolicy fetchPolicy}) {
+    final Future<QueryResult> result = fetchPolicy == null
+        ? queryManager.fetchQuery(queryId, options)
+        : queryManager.fetchQuery(
+            queryId,
+            WatchQueryOptions(
+              fetchPolicy: fetchPolicy, // allow refetch to be cache only
+              document: options.document,
+              variables: options.variables,
+              errorPolicy: options.errorPolicy,
+              pollInterval: options.pollInterval,
+              fetchResults: options.fetchResults,
+              context: options.context,
+            ),
+          );
 
     if (options.pollInterval != null) {
       startPolling(options.pollInterval);

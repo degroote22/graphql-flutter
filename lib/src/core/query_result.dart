@@ -1,4 +1,5 @@
 import 'package:graphql_flutter/src/core/graphql_error.dart';
+import 'package:graphql_flutter/src/core/query_options.dart';
 
 class QueryResult {
   /// List<dynamic> or Map<String, dynamic>
@@ -6,7 +7,10 @@ class QueryResult {
   List<GraphQLError> errors;
   bool loading;
   bool stale;
-  Future<QueryResult> Function() refetch;
+
+  Future<QueryResult> Function({
+    FetchPolicy fetchPolicy,
+  }) refetch;
 
   QueryResult({
     this.data,
