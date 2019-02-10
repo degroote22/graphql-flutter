@@ -135,8 +135,10 @@ class QueryManager {
 
           queryResult = _mapFetchResultToQueryResult(
             fetchResult: fetchResult,
-            loading:
-                options.fetchPolicy == FetchPolicy.cacheFirst ? false : true,
+            loading: (options.fetchPolicy == FetchPolicy.cacheFirst ||
+                    options.fetchPolicy == FetchPolicy.cacheOnly)
+                ? false
+                : true,
           );
 
           // add the result to an observable query if it exists
