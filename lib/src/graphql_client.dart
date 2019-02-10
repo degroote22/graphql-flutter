@@ -44,6 +44,14 @@ class GraphQLClient {
     return queryManager.query(options);
   }
 
+  QueryResult readQuery(QueryOptions options) {
+    return queryManager.readQuery(options);
+  }
+
+  void writeQuery(QueryOptions options, dynamic data) {
+    return queryManager.writeQuery(options, data);
+  }
+
   /// This resolves a single mutation according to the [MutationOptions] specified and
   /// returns a [Future] which resolves with the [QueryResult] or throws an [Exception].
   Future<QueryResult> mutate(MutationOptions options) {

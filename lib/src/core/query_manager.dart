@@ -59,6 +59,51 @@ class QueryManager {
     return fetchQuery('0', options);
   }
 
+  void writeQuery(QueryOptions options, dynamic data) {
+    // XXX there is a bug in the `graphql_parser` package, where this result might be
+    // null event though the operation name is present in the document
+    final String operationName = getOperationName(options.document);
+    // create a new operation to fetch
+    final Operation operation = Operation(
+      document: options.document,
+      variables: options.variables,
+      operationName: operationName,
+    );
+
+    cache.write(
+      operation.toKey(),
+      data,
+    );
+  }
+
+  QueryResult readQuery(QueryOptions options) {
+    // XXX there is a bug in the `graphql_parser` package, where this result might be
+    // null event though the operation name is present in the document
+    final String operationName = getOperationName(options.document);
+    // create a new operation to fetch
+    final Operation operation = Operation(
+      document: options.document,
+      variables: options.variables,
+      operationName: operationName,
+    );
+
+    final dynamic cachedData = cache.read(operation.toKey());
+    if (cachedData == null) {
+      throw Exception(
+        'Could not find that operation in the cache.',
+      );
+    }
+    final FetchResult fetchResult = FetchResult(
+      data: cachedData,
+    );
+
+    final QueryResult queryResult = _mapFetchResultToQueryResult(
+        fetchResult: fetchResult,
+        loading: options.fetchPolicy == FetchPolicy.cacheFirst ? false : true);
+
+    return queryResult;
+  }
+
   Future<QueryResult> fetchQuery(
     String queryId,
     BaseOptions options,
@@ -88,8 +133,11 @@ class QueryManager {
             data: cachedData,
           );
 
-          queryResult = _mapFetchResultToQueryResult(fetchResult,
-              options.fetchPolicy == FetchPolicy.cacheFirst ? false : true);
+          queryResult = _mapFetchResultToQueryResult(
+            fetchResult: fetchResult,
+            loading:
+                options.fetchPolicy == FetchPolicy.cacheFirst ? false : true,
+          );
 
           // add the result to an observable query if it exists
           if (observableQuery != null) {
@@ -142,7 +190,10 @@ class QueryManager {
         );
       }
 
-      queryResult = _mapFetchResultToQueryResult(fetchResult, false);
+      queryResult = _mapFetchResultToQueryResult(
+        fetchResult: fetchResult,
+        loading: false,
+      );
     } catch (error) {
       final GraphQLError graphQLError = GraphQLError(
         message: error.message,
@@ -187,10 +238,10 @@ class QueryManager {
     return requestId;
   }
 
-  QueryResult _mapFetchResultToQueryResult(
-    FetchResult fetchResult,
-    bool loading,
-  ) {
+  QueryResult _mapFetchResultToQueryResult({
+    @required FetchResult fetchResult,
+    @required bool loading,
+  }) {
     List<GraphQLError> errors;
 
     if (fetchResult.errors != null) {
