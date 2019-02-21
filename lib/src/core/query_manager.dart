@@ -98,8 +98,9 @@ class QueryManager {
     );
 
     final QueryResult queryResult = _mapFetchResultToQueryResult(
-        fetchResult: fetchResult,
-        loading: options.fetchPolicy == FetchPolicy.cacheFirst ? false : true);
+      fetchResult: fetchResult,
+      loading: false,
+    );
 
     return queryResult;
   }
