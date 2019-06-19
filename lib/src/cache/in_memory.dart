@@ -76,6 +76,7 @@ class InMemoryCache implements Cache {
   @override
   void reset() {
     _inMemoryCache.clear();
+    save();
   }
 
   Future<String> get _localStoragePath async {
