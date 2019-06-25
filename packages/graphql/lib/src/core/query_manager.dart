@@ -60,6 +60,26 @@ class QueryManager {
     return fetchQuery('0', options);
   }
 
+  QueryResult readQuery(QueryOptions options) {
+    final Operation operation = Operation.fromOptions(options);
+
+    final QueryResult queryResult = QueryResult(
+      data: cache.read(operation.toKey()),
+      source: QueryResultSource.Cache,
+    );
+
+    return queryResult;
+  }
+
+  void writeQuery(QueryOptions options, dynamic data) {
+    final Operation operation = Operation.fromOptions(options);
+
+    cache.write(
+      operation.toKey(),
+      data,
+    );
+  }
+
   Future<QueryResult> fetchQuery(
     String queryId,
     BaseOptions options,
@@ -221,8 +241,14 @@ class QueryManager {
     return queryResult;
   }
 
-  void refetchQuery(String queryId) {
+  void refetchQuery(
+    String queryId, {
+    FetchPolicy fetchPolicy,
+  }) {
     final WatchQueryOptions options = queries[queryId].options;
+    if (fetchPolicy != null) {
+      options.fetchPolicy = fetchPolicy;
+    }
     fetchQuery(queryId, options);
   }
 

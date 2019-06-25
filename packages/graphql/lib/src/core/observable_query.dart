@@ -76,9 +76,14 @@ class ObservableQuery {
   }
 
   /// Attempts to refetch, returning `true` if successful
-  bool refetch() {
+  bool refetch({
+    FetchPolicy fetchPolicy,
+  }) {
     if (_isRefetchSafe) {
-      queryManager.refetchQuery(queryId);
+      queryManager.refetchQuery(
+        queryId,
+        fetchPolicy: fetchPolicy,
+      );
       return true;
     }
     return false;

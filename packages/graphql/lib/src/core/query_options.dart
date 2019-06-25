@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:meta/meta.dart';
 
 import 'package:graphql/src/utilities/helpers.dart';
@@ -74,7 +76,7 @@ class QueryOptions extends BaseOptions {
     ErrorPolicy errorPolicy = ErrorPolicy.none,
     Object optimisticResult,
     this.pollInterval,
-    Map<String, dynamic> context,
+    FutureOr<Map<String, dynamic>> context,
   }) : super(
           document: document,
           variables: variables,
@@ -96,7 +98,7 @@ class MutationOptions extends BaseOptions {
     Map<String, dynamic> variables,
     FetchPolicy fetchPolicy = FetchPolicy.networkOnly,
     ErrorPolicy errorPolicy = ErrorPolicy.none,
-    Map<String, dynamic> context,
+    FutureOr<Map<String, dynamic>> context,
   }) : super(
           document: document,
           variables: variables,
@@ -117,7 +119,7 @@ class WatchQueryOptions extends QueryOptions {
     int pollInterval,
     this.fetchResults = false,
     this.eagerlyFetchResults,
-    Map<String, dynamic> context,
+    FutureOr<Map<String, dynamic>> context,
   }) : super(
           document: document,
           variables: variables,
