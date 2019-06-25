@@ -98,8 +98,16 @@ class QueryManager {
     BaseOptions options,
   ) async {
     // create a new operation to fetch
-    final Operation operation = Operation.fromOptions(options)
-      ..setContext(options.context);
+    final Operation operation = Operation.fromOptions(options);
+
+    // get the async context
+    try {
+      if (options.context != null) {
+        operation.setContext(await options.context);
+      }
+    } catch (err) {
+      throw Exception('Could not resolve context promise');
+    }
 
     FetchResult fetchResult;
     QueryResult queryResult;
