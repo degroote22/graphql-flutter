@@ -62,7 +62,7 @@ class BaseOptions extends RawOperationData {
   ErrorPolicy errorPolicy;
 
   /// Context to be passed to link execution chain.
-  Map<String, dynamic> context;
+  FutureOr<Map<String, dynamic>> context;
 }
 
 /// Query options.
