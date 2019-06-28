@@ -79,7 +79,7 @@ class ObservableQuery {
   bool refetch({
     FetchPolicy fetchPolicy,
   }) {
-    if (_isRefetchSafe) {
+    if (_isRefetchSafe || fetchPolicy == FetchPolicy.cacheOnly) {
       queryManager.refetchQuery(
         queryId,
         fetchPolicy: fetchPolicy,

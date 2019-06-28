@@ -170,3 +170,20 @@ class WatchQueryOptions extends QueryOptions {
     return areDifferentVariables(a.variables, b.variables);
   }
 }
+
+typedef dynamic UpdateQuery(
+  dynamic previousQueryResults,
+  dynamic fetchmoreQueryResults,
+);
+
+/// options for fetchmore operations
+class FetchMoreOptions {
+  FetchMoreOptions({
+    String document,
+    Map<String, dynamic> variables,
+  })  : this.variables = variables,
+        this.document = document;
+
+  final String document;
+  final Map<String, dynamic> variables;
+}

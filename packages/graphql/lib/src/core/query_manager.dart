@@ -63,12 +63,11 @@ class QueryManager {
   QueryResult readQuery(QueryOptions options) {
     final Operation operation = Operation.fromOptions(options);
 
-    final QueryResult queryResult = QueryResult(
-      data: cache.read(operation.toKey()),
+    return mapFetchResultToQueryResult(
+      FetchResult(data: cache.read(operation.toKey())),
+      options,
       source: QueryResultSource.Cache,
     );
-
-    return queryResult;
   }
 
   void writeQuery(QueryOptions options, dynamic data) {
@@ -78,6 +77,7 @@ class QueryManager {
       operation.toKey(),
       data,
     );
+    rebroadcastQueries();
   }
 
   Future<QueryResult> fetchQuery(
@@ -100,6 +100,9 @@ class QueryManager {
       options,
     );
 
+    print(
+        "${(shouldStopAtCache(options.fetchPolicy) && !eagerResult.loading)} stopping at cache");
+    print(options.fetchPolicy);
     // _resolveQueryEagerly handles cacheOnly,
     // so if we're loading + cacheFirst we continue to network
     return MultiSourceResult(

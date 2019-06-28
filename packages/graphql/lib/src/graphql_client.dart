@@ -49,7 +49,7 @@ class GraphQLClient {
   }
 
   void writeQuery(QueryOptions options, dynamic data) {
-    return queryManager.writeQuery(options, data);
+    queryManager.writeQuery(options, data);
   }
 
   /// This resolves a single mutation according to the [MutationOptions] specified and
