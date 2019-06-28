@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 
 import 'package:graphql/client.dart';
 import 'package:graphql/internal.dart';
+import 'package:graphql/src/core/query_options.dart';
 
 import 'package:graphql_flutter/src/widgets/graphql_provider.dart';
 
