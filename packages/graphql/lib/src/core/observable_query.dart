@@ -76,13 +76,10 @@ class ObservableQuery {
   }
 
   /// Attempts to refetch, returning `true` if successful
-  bool refetch({
-    FetchPolicy fetchPolicy,
-  }) {
-    if (_isRefetchSafe || fetchPolicy == FetchPolicy.cacheOnly) {
+  bool refetch() {
+    if (_isRefetchSafe) {
       queryManager.refetchQuery(
         queryId,
-        fetchPolicy: fetchPolicy,
       );
       return true;
     }

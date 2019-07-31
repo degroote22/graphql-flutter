@@ -6,9 +6,7 @@ import 'package:graphql/src/core/query_options.dart';
 
 import 'package:graphql_flutter/src/widgets/graphql_provider.dart';
 
-typedef RefetchCallback = bool Function({
-  FetchPolicy fetchPolicy,
-});
+typedef RefetchCallback = bool Function();
 
 typedef QueryBuilder = Widget Function(
   QueryResult result, {
@@ -37,9 +35,9 @@ class QueryState extends State<Query> {
   WatchQueryOptions get _options {
     FetchPolicy fetchPolicy = widget.options.fetchPolicy;
 
-    if (fetchPolicy == FetchPolicy.cacheFirst) {
-      fetchPolicy = FetchPolicy.cacheAndNetwork;
-    }
+    // if (fetchPolicy == FetchPolicy.cacheFirst) {
+    //   fetchPolicy = FetchPolicy.cacheAndNetwork;
+    // }
 
     return WatchQueryOptions(
       document: widget.options.document,
@@ -64,7 +62,10 @@ class QueryState extends State<Query> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _initQuery();
+    if (observableQuery == null ||
+        !observableQuery.options.areEqualTo(_options)) {
+      _initQuery();
+    }
   }
 
   @override

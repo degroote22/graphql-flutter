@@ -35,21 +35,24 @@ class GraphQLClient {
   /// This registers a query in the [QueryManager] and returns an [ObservableQuery]
   /// based on the provided [WatchQueryOptions].
   ObservableQuery watchQuery(WatchQueryOptions options) {
+    // cache.reset();
     return queryManager.watchQuery(options);
   }
 
   /// This resolves a single query according to the [QueryOptions] specified and
   /// returns a [Future] which resolves with the [QueryResult] or throws an [Exception].
   Future<QueryResult> query(QueryOptions options) {
+    // cache.reset();
+
     return queryManager.query(options);
   }
 
   QueryResult readQuery(QueryOptions options) {
-    return queryManager.readQuery(options);
+    return queryManager.readQueryFromCache(options);
   }
 
   void writeQuery(QueryOptions options, dynamic data) {
-    queryManager.writeQuery(options, data);
+    queryManager.writeQueryToCache(options, data);
   }
 
   /// This resolves a single mutation according to the [MutationOptions] specified and

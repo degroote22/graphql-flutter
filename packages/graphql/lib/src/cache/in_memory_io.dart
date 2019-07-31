@@ -12,13 +12,11 @@ import 'package:graphql/src/cache/cache.dart';
 import 'package:graphql/src/utilities/helpers.dart' show deeplyMergeLeft;
 import 'package:path/path.dart';
 
-
 class InMemoryCache implements Cache {
-
   InMemoryCache({
     this.storagePrefix = '',
   });
-  
+
   final FutureOr<String> storagePrefix;
 
   bool _writingToStorage = false;
@@ -56,12 +54,16 @@ class InMemoryCache implements Cache {
   /// Saves the internal HashMap to a file.
   @override
   Future<void> save() async {
+    print('save');
+
     await _writeToStorage();
   }
 
   /// Restores the internal HashMap to a file.
   @override
   Future<void> restore() async {
+    print('restore');
+
     data = await _readFromStorage();
   }
 

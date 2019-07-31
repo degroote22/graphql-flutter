@@ -60,7 +60,7 @@ class QueryManager {
     return fetchQuery('0', options);
   }
 
-  QueryResult readQuery(QueryOptions options) {
+  QueryResult readQueryFromCache(QueryOptions options) {
     final Operation operation = Operation.fromOptions(options);
 
     return mapFetchResultToQueryResult(
@@ -70,7 +70,7 @@ class QueryManager {
     );
   }
 
-  void writeQuery(QueryOptions options, dynamic data) {
+  void writeQueryToCache(QueryOptions options, dynamic data) {
     final Operation operation = Operation.fromOptions(options);
 
     cache.write(
@@ -99,10 +99,11 @@ class QueryManager {
       queryId,
       options,
     );
-
+    print(options.fetchPolicy);
     print(
         "${(shouldStopAtCache(options.fetchPolicy) && !eagerResult.loading)} stopping at cache");
-    print(options.fetchPolicy);
+    print("${(!eagerResult.loading)} found at cache");
+    print(options.document);
     // _resolveQueryEagerly handles cacheOnly,
     // so if we're loading + cacheFirst we continue to network
     return MultiSourceResult(
@@ -245,13 +246,10 @@ class QueryManager {
   }
 
   void refetchQuery(
-    String queryId, {
-    FetchPolicy fetchPolicy,
-  }) {
+    String queryId,
+  ) {
     final WatchQueryOptions options = queries[queryId].options;
-    if (fetchPolicy != null) {
-      options.fetchPolicy = fetchPolicy;
-    }
+
     fetchQuery(queryId, options);
   }
 
@@ -326,7 +324,7 @@ class QueryManager {
             mapFetchResultToQueryResult(
               FetchResult(data: cachedData),
               query.options,
-              source: QueryResultSource.Cache,
+              source: query.latestResult?.source ?? QueryResultSource.Cache,
             ),
           );
         }
